@@ -1,0 +1,41 @@
+import tkinter as tk
+from tkinter import ttk
+import psutil
+
+# Function to update the process list
+def update_process_list():
+    process_list.delete(0, tk.END)  # Clear the existing list
+
+    for process in psutil.process_iter(attrs=['name']):
+        process_name = process.info['name']
+        process_list.insert(tk.END, process_name)
+
+    root.after(1000, update_process_list)  # Update every second
+
+# Create the main window
+root = tk.Tk()
+root.title("Running Applications")
+
+# Increase the window size
+root.geometry("400x400")
+
+# Create a listbox to display the running applications
+process_frame = ttk.Frame(root)
+process_frame.pack(padx=20, pady=20, fill=tk.BOTH, expand=True)
+
+process_list = tk.Listbox(process_frame, width=40)
+process_list.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+# Add a scrollbar to the list
+scrollbar = ttk.Scrollbar(process_frame, orient=tk.VERTICAL, command=process_list.yview)
+scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+process_list.config(yscrollcommand=scrollbar.set)
+
+# Initial update
+update_process_list()
+
+# Run the GUI
+root.mainloop()
+
+
+# CREATED WITH THE HELP OF OPEN-AI CHAT GPT: https://chat.openai.com/chat
